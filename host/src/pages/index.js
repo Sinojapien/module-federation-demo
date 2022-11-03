@@ -4,14 +4,14 @@ import { injectScript } from "@module-federation/nextjs-mf/utils";
 
 // import RemoteHeader from "../components/RemoteHeader";
 // import RemoteFooter from "../components/RemoteFooter";
-// import RemoteCustomLink from "../components/RemoteCustomLink";
+import PlaneRemoteCustomLink from "../components/RemoteCustomLink";
 // import Header from "../components/Header";
 // import Footer from "../components/Footer";
 // import CustomLink from "../components/CustomLink";
 // import CusomCounter from "../components/CustomCounter";
-// import RemoteCustomCounter from "../components/RemoteCustomCounter";
+// import PlaneRemoteCustomCounter from "../components/RemoteCustomCounter";
 
-// injectScript({
+// const container = await injectScript({
 //   global: "host",
 //   url: "http://localhost:3000/_next/static/chunks/remoteEntry.js",
 // }).then((remoteContainer) => {
@@ -27,12 +27,16 @@ const RemoteCustomLink = dynamic(() => import("host/CustomLink"), {
 });
 
 export default function Home() {
+  // console.log(container);
+
   return (
     <>
-      <RemoteCustomCounter />
+      {/* <RemoteCustomCounter /> */}
       {/* <RemoteHeader /> */}
       <div>This is content</div>
-      <RemoteCustomLink>remote testing</RemoteCustomLink>
+      {/* <RemoteCustomLink>remote testing</RemoteCustomLink> */}
+      <PlaneRemoteCustomLink />
+      {/* <PlaneRemoteCustomCounter /> */}
       {/* <RemoteCustomCounter /> */}
       {/* <RemoteFooter /> */}
     </>

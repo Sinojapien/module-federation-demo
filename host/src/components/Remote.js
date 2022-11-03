@@ -55,10 +55,10 @@ const RemoteComponent = ({
   //   "http://localhost:8080/remoteEntry.js"
   // );
 
-  // const { ready, failed } = useDynamicScript(`${url}/${filename}`);
-  const { ready, failed } = useDynamicScript(
-    `${url}/_next/static/chunks/${filename}`
-  );
+  const { ready, failed } = useDynamicScript(`${url}/${filename}`);
+  // const { ready, failed } = useDynamicScript(
+  //   `${url}/_next/static/chunks/${filename}`
+  // );
 
   if (!ready || failed || !global) {
     return null;
@@ -76,6 +76,14 @@ const RemoteComponent = ({
               get: () => Promise.resolve(() => require("react")),
               loaded: true,
             },
+            // ["react-dom"]: {
+            //   get: () => Promise.resolve(() => require("react-dom")),
+            //   loaded: true,
+            // },
+            // ["next"]: {
+            //   get: () => Promise.resolve(() => require("next")),
+            //   loaded: true,
+            // },
           },
           global.__webpack_require__ ? global.__webpack_require__.o : {}
         )
