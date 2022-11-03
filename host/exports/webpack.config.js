@@ -1,8 +1,4 @@
-// const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
-// const path = require("path");
-
-const dependencies = require("./package.json").dependencies;
 
 module.exports = {
   module: {
@@ -10,15 +6,13 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: "babel-loader",
-            // necessary if bwepack / babel is not present is remote
-            options: {
-              presets: ["@babel/preset-env", "@babel/preset-react"],
-            },
+        use: {
+          loader: "babel-loader",
+          // necessary if bwepack / babel is not present is remote
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
           },
-        ],
+        },
       },
       {
         test: /\.css$/i,
@@ -29,26 +23,16 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: "host",
-      filename: "exports.js",
       library: { type: "var", name: "host" },
+      filename: "remoteEntry.js",
       remotes: {
         host: "host",
       },
       exposes: {
-        "./Header": "../src/components/Header.js",
-        "./Footer": "../src/components/Footer.js",
+        "./Header": "../src/components/Header",
+        "./Footer": "../src/components/Footer",
       },
-      shared: {
-        ...dependencies,
-        react: {
-          singleton: true,
-          requiredVersion: dependencies["react"],
-        },
-        "react-dom": {
-          singleton: true,
-          requiredVersion: dependencies["react-dom"],
-        },
-      },
+      shared: require("../package.json").dependencies,
     }),
   ],
 };

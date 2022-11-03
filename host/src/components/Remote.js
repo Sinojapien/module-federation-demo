@@ -42,32 +42,47 @@ const useDynamicScript = (url) => {
   };
 };
 
-export default ({ name }) => {
-  const { ready, failed } = useDynamicScript(
-    "http://localhost:8080/exports.js"
-  );
+const RemoteComponent = ({
+  url,
+  filename = "remoteEntry.js",
+  remoteScope,
+  remoteModule,
+}) => {
+  // const { ready, failed } = useDynamicScript(
+  //   "http://localhost:8080/remoteEntry.js"
+  // );
+
+  const { ready, failed } = useDynamicScript(`${url}/${filename}`);
 
   if (!ready || failed || !global) {
     return null;
   }
 
-  const scope = "host";
-  const module = "./Header";
+  // const remoteScope = "host";
+  // const remoteModule = "./Header";
 
-  global[scope].init(
-    Object.assign(
-      {
-        react: {
-          get: () => Promise.resolve(() => require("react")),
-          loaded: true,
-        },
-      },
-      global.__webpack_require__ ? global.__webpack_require__.o : {}
-    )
-  );
+  try {
+    if (!global[remoteScope].__initialized) {
+      global[remoteScope].init(
+        Object.assign(
+          {
+            react: {
+              get: () => Promise.resolve(() => require("react")),
+              loaded: true,
+            },
+          },
+          global.__webpack_require__ ? global.__webpack_require__.o : {}
+        )
+      );
+
+      global[remoteScope].__initialized = true;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
   const Component = React.lazy(() =>
-    global[scope].get(module).then((factory) => {
+    global[remoteScope].get(remoteModule).then((factory) => {
       const Module = factory();
       return Module;
     })
@@ -75,7 +90,9 @@ export default ({ name }) => {
 
   return (
     <React.Suspense fallback={<div>Loading caption</div>}>
-      <Component name={name} />
+      <Component />
     </React.Suspense>
   );
 };
+
+export default RemoteComponent;

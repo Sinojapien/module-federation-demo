@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production",
-    "build:start": "cd dist && PORT=8080 npx serve",
-    "start": "webpack serve --mode development"
+    "build": "webpack --mode development",
+    "start": "webpack serve --mode development",
+    "serve": "npm run build && cd dist && PORT=8080 npx serve"
   },
   "dependencies": {
     "react": "18.2.0",

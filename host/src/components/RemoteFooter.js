@@ -1,11 +1,11 @@
 import RemoteComponent from "./Remote";
 
-const RemoteHeader = () => (
+const RemoteFooter = () => (
   <RemoteComponent
     url="http://localhost:8080"
     remoteScope="host"
-    remoteModule="./Header"
+    remoteModule="./Footer"
   />
 );
 
-export default RemoteHeader;
+export default RemoteFooter;
