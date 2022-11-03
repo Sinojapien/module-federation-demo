@@ -1,4 +1,7 @@
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+// const { ModuleFederationPlugin } = require("webpack").container;
+
+const deps = require("../package.json").dependencies;
 
 module.exports = {
   module: {
@@ -8,7 +11,7 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          // necessary if bwepack / babel is not present is remote
+          // necessary if webpack / babel is not present is remote
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
           },
@@ -31,8 +34,20 @@ module.exports = {
       exposes: {
         "./Header": "../src/components/Header",
         "./Footer": "../src/components/Footer",
+        "./CustomLink": "../src/components/CustomLink",
+        "./CustomCounter": "../src/components/CustomCounter",
       },
-      shared: require("../package.json").dependencies,
+      shared: {
+        ...deps,
+        // react: {
+        //   singleton: true,
+        //   requiredVersion: deps.react,
+        // },
+        // "react-dom": {
+        //   singleton: true,
+        //   requiredVersion: deps["react-dom"],
+        // },
+      },
     }),
   ],
 };

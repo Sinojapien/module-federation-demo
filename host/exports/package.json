@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "webpack --mode development",
+    "build": "webpack --mode development --config webpack.config.js",
     "start": "webpack serve --mode development",
     "serve": "npm run build && cd dist && PORT=8080 npx serve"
   },

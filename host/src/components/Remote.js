@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import dynamic from "next/dynamic";
 
 const useDynamicScript = (url) => {
-  const [ready, setReady] = React.useState(false);
-  const [failed, setFailed] = React.useState(false);
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!url) {
       return;
     }
@@ -47,12 +49,16 @@ const RemoteComponent = ({
   filename = "remoteEntry.js",
   remoteScope,
   remoteModule,
+  ...props
 }) => {
   // const { ready, failed } = useDynamicScript(
   //   "http://localhost:8080/remoteEntry.js"
   // );
 
-  const { ready, failed } = useDynamicScript(`${url}/${filename}`);
+  // const { ready, failed } = useDynamicScript(`${url}/${filename}`);
+  const { ready, failed } = useDynamicScript(
+    `${url}/_next/static/chunks/${filename}`
+  );
 
   if (!ready || failed || !global) {
     return null;
@@ -81,17 +87,26 @@ const RemoteComponent = ({
     console.log(error);
   }
 
-  const Component = React.lazy(() =>
-    global[remoteScope].get(remoteModule).then((factory) => {
-      const Module = factory();
-      return Module;
-    })
+  // const Component = React.lazy(() =>
+  //   global[remoteScope].get(remoteModule).then((factory) => {
+  //     const Module = factory();
+  //     return Module;
+  //   })
+  // );
+
+  const Component = dynamic(
+    () =>
+      global[remoteScope].get(remoteModule).then((factory) => {
+        const Module = factory();
+        return Module;
+      }),
+    { ssr: false }
   );
 
   return (
-    <React.Suspense fallback={<div>Loading caption</div>}>
-      <Component />
-    </React.Suspense>
+    // <React.Suspense fallback={<div>Loading caption</div>}>
+    <Component {...props} />
+    // </React.Suspense>
   );
 };
 
